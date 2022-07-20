@@ -1,5 +1,5 @@
-const url = 'https://reqres.in/api/users?page='
-const column = [
+var url = 'https://reqres.in/api/users?page='
+var column = [
   {
     title: 'Sequence',
     data: 'sequence',
@@ -28,9 +28,9 @@ const column = [
     data: 'email',
   },
 ]
-const page_Length = 6
-const total_pages = 2
-const result = {
+var page_Length = 6
+var total_pages = 2
+var result = {
   page: 1,
   per_page: 6,
   total: 12,
@@ -83,33 +83,6 @@ const result = {
     url: 'https://reqres.in/#support-heading',
     text: 'To keep ReqRes free, contributions towards server costs are appreciated!',
   },
-}
-function sortData(data, order) {
-  if (order.length > 0) {
-    var columnIndex = order[0].column
-    var sortOrder = order[0].dir
-    var columnName = column[columnIndex].data
-    data.sort(function (a, b) {
-      if (sortOrder == 'asc') {
-        if (a[columnName] < b[columnName]) {
-          return -1
-        }
-        if (a[columnName] > b[columnName]) {
-          return 1
-        }
-        return 0
-      } else {
-        if (a[columnName] > b[columnName]) {
-          return -1
-        }
-        if (a[columnName] < b[columnName]) {
-          return 1
-        }
-        return 0
-      }
-    })
-  }
-  return data
 }
 $.fn.dataTable.Api.register('clearPipeline()', function () {
   return this.iterator('table', function (settings) {
@@ -221,16 +194,15 @@ $.fn.dataTable.pipeline = function (opts) {
             d.sequence = i
             return d
           })
-          json.data = sortData(json.data, request.order)
           drawCallback(json)
         },
       })
     } else {
       json = $.extend(true, {}, cacheLastJson)
       json.draw = request.draw // Update the echo for each response
-      json.data = sortData(
-        cacheLastData.slice(requestStart, requestStart + requestLength),
-        request.order
+      json.data = cacheLastData.slice(
+        requestStart,
+        requestStart + requestLength
       )
       json.page = pageNumber
       // json.data.splice(0, requestStart - cacheLower)
